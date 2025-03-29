@@ -26,9 +26,26 @@ class PlateReaderClient:
 
         return res.json()
 
+    def read_plate_by_id(self, plate_id: int):
+        res = requests.get(
+            f'{self.host}/id/{plate_id}'
+        )
+        return res
+
+    def read_multiple_plates(self, plate_ids: list[int]):
+        res = requests.post(
+            f'{self.host}/readplates',
+            json={
+                'ids': plate_ids,
+            }
+        )
+        return res
+
 
 if __name__ == '__main__':
     client = PlateReaderClient(host='http://127.0.0.1:8080')
-    with open('./images/9965.jpg', 'rb') as im:
-        res = client.read_plate_number(im)
-        print(res)
+    # get single plate num
+    res = client.read_plate_by_id(10022)
+    # get multiple plate nums
+    # res = client.read_multiple_plates([10022, 9965])
+    print(res.text)
